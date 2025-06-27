@@ -11,6 +11,7 @@ t=0,draw=$=>{t||createCanvas(w=400,w);background(9).stroke(w,96);for(t+=Pl/240,i
 
 陈安锦 --公众号
 
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/5a6f3f21-23ff-4ba9-888f-9ba41ee76a93)
+
 
 
