@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可视化 - 陈安锦</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #090909; /* 设置深色背景 */
+            color: #e5e7eb; /* 使用浅灰色文字以提高对比度 */
+            overflow-x: hidden;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .glassmorphism {
+            background: rgba(17, 24, 39, 0.7); /* 深色玻璃拟态效果 */
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight-text::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: rgba(99, 102, 241, 0.2);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<div id="canvas-container"></div>
+
+<!-- Code Block -->
+<!--<div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-11/12 max-w-3xl z-10">-->
+<!--    <div class="glassmorphism p-4">-->
+<!--        <h3 class="text-md font-semibold mb-2 text-indigo-400 text-center">原始代码</h3>-->
+<!--        <pre class="bg-gray-900/50 p-3 rounded text-sm overflow-x-auto text-gray-300">a=(x,y,d=mag(k=(4+sin(y*2-t)*3)*cos(x/9),e=y/8-13))=>point((q=3*sin(k*2)+.3/k+sin(y/25)*k*(9+4*sin(e*9-d*3+t*2)))+30*cos(c=d-t)+200,q*sin(c)+d*39-220)-->
+<!--t=0,draw=$=>{t||createCanvas(w=400,w);background(9).stroke(w,96);for(t+=Pl/240,i=1e4;i&#45;&#45;;)a(i,i/235)}</pre>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Code Block &ndash;&gt;-->
+<!--    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-10">-->
+<!--        <div class="glassmorphism p-4">-->
+<!--            <h3 class="text-md font-semibold mb-2 text-indigo-400 text-center">原始代码</h3>-->
+<!--            <pre class="bg-gray-900/50 p-3 rounded text-base whitespace-pre-wrap break-all text-gray-300">a=(x,y,d=mag(k=(4+sin(y*2-t)*3)*cos(x/9),e=y/8-13))=>point((q=3*sin(k*2)+.3/k+sin(y/25)*k*(9+4*sin(e*9-d*3+t*2)))+30*cos(c=d-t)+200,q*sin(c)+d*39-220)-->
+<!--t=0,draw=$=>{t||createCanvas(w=400,w);background(9).stroke(w,96);for(t+=Pl/240,i=1e4;i&#45;&#45;;)a(i,i/235)}</pre>-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- Code Block -->
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-10">
+        <div class="glassmorphism p-4">
+            <h3 class="text-md font-semibold mb-2 text-indigo-400 text-center">原始代码</h3>
+            <pre class="bg-gray-900/50 p-3 rounded text-base whitespace-pre-wrap break-all text-gray-300">a=(x,y,d=mag(k=(4+sin(y*2-t)*3)*cos(x/9),e=y/8-13))=>point((q=3*sin(k*2)+.3/k+sin(y/25)*k*(9+4*sin(e*9-d*3+t*2)))+30*cos(c=d-t)+200,q*sin(c)+d*39-220)
+t=0,draw=$=>{t||createCanvas(w=400,w);background(9).stroke(w,96);for(t+=Pl/240,i=1e4;i--;)a(i,i/235)}</pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    // p5.js 代码实现
+    function setup() {
+        const canvas = createCanvas(windowWidth, windowHeight);
+        canvas.parent('canvas-container');
+        stroke(255, 150);
+    }
+
+    let t = 0;
+    const Pl = Math.PI;
+
+    function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+    }
+
+    function draw() {
+        background(9, 9, 9, 25); // 使用带透明度的背景制造拖尾效果
+        translate(width / 2, height / 2); // 将动画原点移至画布中心
+
+        t += Pl / 240;
+
+        for(let i = 10000; i--;) {
+            const x = i;
+            const y = i / 235;
+
+            const k = (4 + sin(y * 2 - t) * 3) * cos(x / 9);
+            const e = y / 8 - 13;
+            const d = sqrt(k * k + e * e);
+            const c = d - t;
+
+            const q = 3 * sin(k * 2) + 0.3 / k + sin(y / 25) * k * (9 + 4 * sin(e * 9 - d * 3 + t * 2));
+
+            // 调整坐标计算以适应居中和全屏显示
+            const px = q + 30 * cos(c);
+            const py = q * sin(c) + d * 39 - height / 2.5;
+
+            point(px, py);
+        }
+    }
+</script>
+</body>
+</html>
